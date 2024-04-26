@@ -13,7 +13,7 @@ const Portal = () => {
   return (
     <div className='overall-card'>
       <div className='upload-card'>
-      <IoMdCloudUpload className='FaIcon'/>
+      <IoMdCloudUpload className='FaIcon1'/>
       <h2>Upload Expense Report</h2>
       <button className="custom-file-button" onClick={() => document.getElementById('fileInput').click()}>
         Choose File
