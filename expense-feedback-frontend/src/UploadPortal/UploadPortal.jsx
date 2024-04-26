@@ -1,6 +1,6 @@
 import React from 'react';
 import './UploadPortal.css'; // Assuming this file contains your custom styles
-import { TiUpload } from "react-icons/ti";
+import { IoMdCloudUpload } from "react-icons/io";
 
 const Portal = () => {
 
@@ -11,13 +11,15 @@ const Portal = () => {
   };
 
   return (
-    <div className='upload-card'>
-      <TiUpload className='FaIcon'/>
+    <div className='overall-card'>
+      <div className='upload-card'>
+      <IoMdCloudUpload className='FaIcon'/>
       <h2>Upload Expense Report</h2>
       <button className="custom-file-button" onClick={() => document.getElementById('fileInput').click()}>
         Choose File
       </button>
       <input type="file" id="fileInput" className="file-input" onChange={handleFileSelect} />
+    </div>
     </div>
   );
 };
