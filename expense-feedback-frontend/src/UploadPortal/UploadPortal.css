@@ -1,66 +1,81 @@
-.portal-container{
+.portal-container {
   background-color: black;
-  
 }
 
-.overall-card{
-width: 100vw;
-height: 80vh;
-display: flex;
-justify-content: center;
-align-items: center;
+.overall-card {
+  margin-top: 30vh;
+  width: 100vw;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.upload-card{
-width:  30%;
-height: 5vh;
-background-color: white;
-display: flex;
-flex-direction: row;
-justify-content: center;
-border-radius: 75px;
-align-items: center;
-backdrop-filter: blur(20px);
-padding: 10px 0px;
-filter: drop-shadow(0px 0px 0.5em black);
-
+.upload-card {
+  width: 30%;
+  height: 5vh;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  border-radius: 75px;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  padding: 10px 0px;
+  filter: drop-shadow(0px 0px 0.5em black);
 }
 
-.upload-card h2{
-white-space: nowrap; 
+.upload-card h2 {
+  white-space: nowrap;
 }
 
-.FaIcon1{
-color: black;
-font-size: 25px;
-margin-right: 30px;
+.FaIcon1 {
+  color: black;
+  font-size: 25px;
+  margin-right: 30px;
 }
 
 .custom-file-button {
-display: inline-block;
-background-color: #007bff;
-color: #fff;
-border: none;
-border-radius: 75px;
-margin-left: 15px;
-cursor: pointer;
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 75px;
+  margin-left: 15px;
+  cursor: pointer;
 }
 
 /* Hide the default file input element */
 .file-input {
-display: none;
+  display: none;
 }
 
-.upload-file{
-text-decoration: none;
-background: none;
-background: #fff;
-border: none;
-outline: none;
-border-radius: 40px;
-box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-cursor: pointer;
-font-size: 16px;
-color: #333;
-font-weight: 700;
+.feedback-card{
+  width: 100vw;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-file {
+  text-decoration: none;
+  background: none;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 700;
+}
+
+.text-display {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .1);
 }
