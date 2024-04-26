@@ -1,0 +1,8 @@
+.overall-register{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Remaining styles will be attained from LoginForm.css */

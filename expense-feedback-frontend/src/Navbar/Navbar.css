@@ -1,0 +1,37 @@
+.menu{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.menu li{
+    padding: 20px 0px;
+    margin: 0px 15px;
+    list-style: none;
+}
+
+.menu li a{
+    color: lightgray;
+}
+
+.menu li a:hover{
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.main-nav{
+    background-color: black;
+}
+
+FiUser{
+    color: white;
+}
+
+@media (prefers-color-scheme: light){
+    .menu li a{
+        color: lightgray;
+    }
+
+    .main-nav{
+        background-color: black;
+    }
+}
