@@ -57,7 +57,7 @@ const LoginForm = () => {
             <div className='overall-login'>
                 <div className='wrapper'>
                     <form className="entryform">
-                        <h1>Expense Feedback</h1>
+                        <h1>CostoSight</h1>
                         <div className="input-box">
                             <input
                                 type='text'
@@ -81,9 +81,9 @@ const LoginForm = () => {
                             <TbShieldLockFilled className='FaIcon'/>
                         </div>
                         <button type='button' onClick={handleLogin}>Login</button>
-                        <div className="register-link">
+                        {/* <div className="register-link">
                             <p>Ready to Dive In? <a href="/register">Register here</a></p>
-                        </div>
+                        </div> */}
                     </form>
                 </div>
             </div>

@@ -1,11 +1,11 @@
 import { BrowserRouter , Route, Routes } from 'react-router-dom';
 import './App.css';
-
+import NotFound from './NotFound/NotFound';
 import Navbar from './Navbar/Navbar';
 import LoginForm from './LoginForm/LoginForm'; // Assuming you have a Login component
 import RegisterForm from './Register/RegisterForm'; // Assuming you have a Register component
 import Portal from './UploadPortal/UploadPortal'; // Assuming you have a Portal component
-import ExpenseForm from './enter_data/expenseform';
+import ExpenseForm from './ExpenseForm/ExpenseForm'
 
 function App() {
   return (
@@ -18,10 +18,10 @@ function App() {
           <Route path="/portal" element={
             <>
               <Navbar />
-              <Portal />
+              <ExpenseForm />
             </>
           }/>
-          <Route path="/expenseform" element={<ExpenseForm/>}/>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </BrowserRouter>

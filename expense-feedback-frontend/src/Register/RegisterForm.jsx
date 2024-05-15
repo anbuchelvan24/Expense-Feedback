@@ -70,7 +70,7 @@ const RegisterForm = () => {
         <div className='overall-register'>
         <div className='wrapper'>
             <form className="entryform" onSubmit={submit}>
-                <h1>Expense Feedback</h1>
+                <h1>CostoSight</h1>
                 <div className="input-box">
                     <input type='text' placeholder='Email ID' required value={email} onChange={(e)=> setEmail(e.target.value)}/>
                     <FaUserAstronaut className='FaIcon'/>

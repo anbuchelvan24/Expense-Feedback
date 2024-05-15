@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title= title
+  body
+
+    block content
+      h1 Upload Your Receipt
+      p(class='supported-formats') Supported Formats: .png, .jpg, .jpeg, .pdf, .tiff
+
+      form(method='POST', action='/upload' enctype="multipart/form-data")
+
+        //- label(for='file') Upload Your File
+        input(name='file' type='file')
+
+        button(type='submit') Upload
+
