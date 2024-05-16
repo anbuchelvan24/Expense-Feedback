@@ -84,7 +84,7 @@ function ExpenseForm() {
 };
 
   return (
-    <Container style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px' }}>
+    <Container style={{ padding: '20px', borderRadius: '10px' }}>
       <Typography variant="h4" gutterBottom align="center" style={{ fontFamily: 'Poppins', color: 'black' }}>
         EXPENSE REPORT
       </Typography>
@@ -220,7 +220,7 @@ function ExpenseForm() {
       </form>
       <div style={{marginLeft:'20px'}}>
       <Grid item xs={12}>
-      <Box className="feedback" border={1} p={2} borderRadius={4} textAlign="center" style={{ boxShadow: '2px 2px 2px', height: '68vh', width: '25vw', backgroundColor: 'white', color: 'black', overflowY: 'scroll' }}>
+      <Box className="feedback" border={1} p={2} borderRadius={4} textAlign="center" style={{ boxShadow: '2px 2px 2px', height: '68vh', width: '20vw', backgroundColor: 'white', color: 'black', overflowY: 'scroll' }}>
         <Typography variant="h6" gutterBottom style={{ fontFamily: 'Poppins', color: 'black' }}>
           FEEDBACK
         </Typography>

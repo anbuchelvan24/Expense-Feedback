@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import './LoginForm.css';
-
 import { TbShieldLockFilled } from "react-icons/tb";
 import { FaUserAstronaut } from "react-icons/fa6";
+import logo from '../assets/CostoSight.png';
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -29,27 +28,6 @@ const LoginForm = () => {
             return;
         }
 
-        // try {
-        //     const response = await axios.post('http://localhost:8080/login', {
-        //         email: email,
-        //         password: password
-        //     });
-
-        //     const authorized = response.data;
-            
-        //     if(authorized)
-        //     {
-        //         alert("Logged in successfully !");
-
-        //         navigate('/polls');
-        //     }
-        //     else{
-        //         alert("Login Attempt failed !")
-        //     }
-
-        // } catch (error) {
-        //     console.error(error);
-        // }
     }
 
     return (
@@ -57,7 +35,7 @@ const LoginForm = () => {
             <div className='overall-login'>
                 <div className='wrapper'>
                     <form className="entryform">
-                        <h1>CostoSight</h1>
+                        <img src={logo} alt="CostoSight Logo" />
                         <div className="input-box">
                             <input
                                 type='text'
