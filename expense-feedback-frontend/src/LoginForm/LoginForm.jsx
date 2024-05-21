@@ -1,34 +1,58 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './LoginForm.css';
 import { TbShieldLockFilled } from "react-icons/tb";
 import { FaUserAstronaut } from "react-icons/fa6";
 import logo from '../assets/CostoSight.png';
 
 const LoginForm = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+
+    const navigate = useNavigate(); // Use useNavigate correctly
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const submit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://localhost:5000/auth/login", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+            if (result.user._id) {
+                navigate("../portal");
+                const user = JSON.stringify(result.user);
+                localStorage.setItem("user", user);
+                localStorage.setItem("token", result.token); // Store the token correctly
+            } else {
+                console.error("Login failed");
+            }
+            console.log(result);
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
-            handleLogin();
+            submit(e); // Call the submit function on Enter key press
         }
-    }
+    };
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        const isValidEmail = () => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        if (!isValidEmail()) {
-            window.alert("Enter a Valid Email");
-            return;
-        }
-
-    }
+    const handleSigninClick = () => {
+        navigate("/register");
+    };
 
     return (
         <>
@@ -39,29 +63,31 @@ const LoginForm = () => {
                         <div className="input-box">
                             <input
                                 type='text'
+                                name="email"
                                 placeholder='Email ID'
                                 required
-                                value={email}
+                                value={formData.email}
                                 onKeyDown={handleKeyPress}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleInputChange}
                             />
-                            <FaUserAstronaut className='FaIcon'/>
+                            <FaUserAstronaut className='FaIcon' />
                         </div>
                         <div className="input-box">
                             <input
                                 type='password'
+                                name="password"
                                 placeholder='Password'
                                 required
-                                value={password}
+                                value={formData.password}
                                 onKeyDown={handleKeyPress}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={handleInputChange}
                             />
-                            <TbShieldLockFilled className='FaIcon'/>
+                            <TbShieldLockFilled className='FaIcon' />
                         </div>
-                        <button type='button' onClick={handleLogin}>Login</button>
-                        {/* <div className="register-link">
-                            <p>Ready to Dive In? <a href="/register">Register here</a></p>
-                        </div> */}
+                        <button type='button' onClick={submit}>Login</button>
+                        <div className="register-link">
+                            <p>Ready to Dive In? <Link to="/register">Register here</Link></p>
+                        </div>
                     </form>
                 </div>
             </div>

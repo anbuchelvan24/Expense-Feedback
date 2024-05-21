@@ -1,116 +1,114 @@
-import React, {SyntheticEvent , useState} from "react";
+import React, { useState } from "react";
 import { FaUserAstronaut } from "react-icons/fa6";
 import { TbShieldLockFilled } from "react-icons/tb";
 import { IoPlanet } from "react-icons/io5";
 import { RiTeamFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-
-// import axios from "axios";
-import './RegisterForm.css'
-
-const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-        addUser();
-    }
-}
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import './RegisterForm.css';
 
 const RegisterForm = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();    
-    const [organization, setOrganization] = useState("");
-    const [team, setTeam] = useState("");
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: ''
+    });
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
 
     const submit = async (e) => {
         e.preventDefault();
-        const response = await fetch("http://localhost:8000/api/register" , {
-            method : 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({
-                email,
-                password,
-                organization,
-                team
-            })
-        });
-        const content = await response.json();
-        console.log(content);
-    }
-
-    const addUser = async (e) => {
-
-        e.preventDefault();
-
-        const isValidEmail = () => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
+        try {
+            const response = await fetch("http://localhost:5000/user/register", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+            if (result.user._id) {
+                navigate("../login");
+            } else {
+                console.error("Signup failed");
+            }
+            console.log(result);
+        } catch (error) {
+            console.error(error.message);
         }
-        if (!isValidEmail()) {
-            window.alert("Enter a Valid Email");
-            return;
-        }
-        // try {
-        //     const response = await axios.post('http://localhost:8080/register', {
-        //         email: email,
-        //         password: password,
-        //         organization: organization,
-        //         team: team
-        //     });
-            
-        //     let message= response.data;
-        //     alert(message);
+    };
 
-        //     navigate('/login');
+    const handleSignInClick = () => {
+        navigate("../login");
+    };
 
-        // } catch (error) {
-        //     console.error(error);
-        // }
-    }
-    return(
+    return (
         <div className='overall-register'>
-        <div className='wrapper'>
-            <form className="entryform" onSubmit={submit}>
-                <h1>CostoSight</h1>
-                <div className="input-box">
-                    <input type='text' placeholder='Email ID' required value={email} onChange={(e)=> setEmail(e.target.value)}/>
-                    <FaUserAstronaut className='FaIcon'/>
-                </div>
-                <div className="input-box">
-                    <input
+            <div className='wrapper'>
+                <form className="entryform" onSubmit={submit}>
+                    <h1>CostoSight</h1>
+                    <div className="input-box">
+                        <input
+                            type='text'
+                            name="email"
+                            className="txt"
+                            placeholder='Email ID'
+                            required
+                            value={formData.email}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div className="input-box">
+                        <input
                             type='password'
+                            name="password"
                             placeholder='Password'
                             required
-                            value={password}
-                            onKeyDown={handleKeyPress}
-                            onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <TbShieldLockFilled className='FaIcon'/>
-                </div>
-                <div className="input-box">
-                    <input
-                    type='text'
-                    placeholder='Organization'
-                    onKeyDown={handleKeyPress}
-                    required value={organization} onChange={(e)=> setOrganization(e.target.value)}
-                    />
-                    <IoPlanet className='FaIcon'/>
-                </div>
-                <div className="input-box">
-                    <input
-                    type='text'
-                    onKeyDown={handleKeyPress}
-                    placeholder='Team'
-                    required value={team} onChange={(e)=> setTeam(e.target.value)}
-                    />
-                    <RiTeamFill className='FaIcon'/>
-                </div>
-
-
-
-                <button type='submit' onClick={submit}>Register</button>
-
-            </form>
-        </div>
+                            value={formData.password}
+                            onChange={handleInputChange}
+                        />
+                        <TbShieldLockFilled className='FaIcon' />
+                    </div>
+                    <div className="input-box">
+                        <input
+                            type='text'
+                            name="firstName"
+                            placeholder='First Name'
+                            required
+                            value={formData.firstName}
+                            onChange={handleInputChange}
+                        />
+                        <IoPlanet className='FaIcon' />
+                    </div>
+                    <div className="input-box">
+                        <input
+                            type='text'
+                            name="lastName"
+                            placeholder='Last Name'
+                            required
+                            value={formData.lastName}
+                            onChange={handleInputChange}
+                        />
+                        <RiTeamFill className='FaIcon' />
+                    </div>
+                    <button type='submit'>Register</button>
+                    <Grid container justifyContent='flex-end'>
+                        <Grid item>
+                            <Link variant="body2" onClick={handleSignInClick}>
+                                <span>Already have an account? Sign in</span>
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </form>
+            </div>
         </div>
     );
 }
