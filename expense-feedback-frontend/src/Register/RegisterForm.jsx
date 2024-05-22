@@ -65,6 +65,7 @@ const RegisterForm = () => {
                             value={formData.email}
                             onChange={handleInputChange}
                         />
+                        <FaUserAstronaut className='FaIcon' />
                     </div>
                     <div className="input-box">
                         <input

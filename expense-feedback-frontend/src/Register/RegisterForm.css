@@ -5,4 +5,8 @@
     min-height: 100vh;
 }
 
+.txt{
+    z-index: 1000;
+}
+
 /* Remaining styles will be attained from LoginForm.css */
