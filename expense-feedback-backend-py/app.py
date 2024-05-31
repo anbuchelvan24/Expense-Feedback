@@ -5,7 +5,7 @@ from query_rag import query_rag
 
 app = Flask(__name__)
 CORS(app) 
-@app.route('/submit-expense', methods=['POST','GET'])
+@app.route('/submit-expense', methods=['POST'])
 def submit_expense():
     # Get the form data from the request
     expense_data = request.json
@@ -33,6 +33,7 @@ def submit_expense():
                         f"Personal expense: {personal_expense}"
                         
     response_from_query_rag = query_rag(promptcreation(formatted_expense))
+    print(response_from_query_rag)
 
     # Return response including the success message and the response from query_rag
     return response_from_query_rag

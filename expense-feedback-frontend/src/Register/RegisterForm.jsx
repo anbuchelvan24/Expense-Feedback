@@ -3,14 +3,22 @@ import { FaUserAstronaut } from "react-icons/fa6";
 import { TbShieldLockFilled } from "react-icons/tb";
 import { IoPlanet } from "react-icons/io5";
 import { RiTeamFill } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import './RegisterForm.css';
+import logo from '../assets/CostoSight.png';
+import { IoMdCloseCircle } from "react-icons/io";
+
+
+const SuccessPopup = ({ onClose, show }) => (
+    <div className={`success-popup ${show ? 'fade-in' : ''}`}>
+      <p>User registered successfully!  <IoMdCloseCircle onClick={onClose}/></p>
+    </div>
+);
 
 const RegisterForm = () => {
     const navigate = useNavigate();
-
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -36,7 +44,10 @@ const RegisterForm = () => {
             });
             const result = await response.json();
             if (result.user._id) {
-                navigate("../login");
+                setShowSuccessPopup(true);
+                setTimeout(() => {
+                    navigate("/login");
+                }, 1000);
             } else {
                 console.error("Signup failed");
             }
@@ -46,15 +57,11 @@ const RegisterForm = () => {
         }
     };
 
-    const handleSignInClick = () => {
-        navigate("../login");
-    };
-
     return (
         <div className='overall-register'>
             <div className='wrapper'>
                 <form className="entryform" onSubmit={submit}>
-                    <h1>CostoSight</h1>
+                    <img src={logo} alt="CostoSight Logo" />
                     <div className="input-box">
                         <input
                             type='text'
@@ -101,13 +108,10 @@ const RegisterForm = () => {
                         <RiTeamFill className='FaIcon' />
                     </div>
                     <button type='submit'>Register</button>
-                    <Grid container justifyContent='flex-end'>
-                        <Grid item>
-                            <Link variant="body2" onClick={handleSignInClick}>
-                                <span>Already have an account? Sign in</span>
-                            </Link>
-                        </Grid>
-                    </Grid>
+                    {showSuccessPopup && <SuccessPopup onClose={() => setShowSuccessPopup(false)} show={showSuccessPopup} />}                    
+                    <div className="register-link" style={{display: 'flex',justifyContent:'flex-end'}}>
+                        <p>Already Registered? <Link to="/login">Login</Link></p>
+                    </div>
                 </form>
             </div>
         </div>

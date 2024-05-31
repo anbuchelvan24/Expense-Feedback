@@ -1,13 +1,13 @@
 require("dotenv").config();
 
 const express = require("express");
-const signupRoute = require("./src/security/routes/signup");
+const signupRoute = require("./routes/signup");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { createAdminAccount } = require("./src/security/scripts/setup");
-const loginRoute = require("./src/security/routes/login");
-const authRoute = require("./src/security/routes/authenticated");
-const { authenticateToken}  = require("./src/security/utils/authMiddleware");
+const { createAdminAccount } = require("./scripts/setup");
+const loginRoute = require("./routes/login");
+const authRoute = require("./routes/authenticated");
+const { authenticateToken}  = require("./utils/authMiddleware");
 const path = require('path');
 const mongoose = require('mongoose');
 const upload = require("./src/gridStore");

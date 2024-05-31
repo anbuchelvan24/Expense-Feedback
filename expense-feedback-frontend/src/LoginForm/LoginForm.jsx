@@ -3,15 +3,25 @@ import { Link, useNavigate } from "react-router-dom";
 import './LoginForm.css';
 import { TbShieldLockFilled } from "react-icons/tb";
 import { FaUserAstronaut } from "react-icons/fa6";
-import logo from '../assets/CostoSight.png';
+import logo from '../assets/Claim AI.png';
+import { IoMdCloseCircle } from "react-icons/io";
+
+
+const SuccessPopup = ({ onClose, show }) => (
+    <div className={`success-popup ${show ? 'fade-in' : ''}`}>
+      <p>User logged in successfully!  <IoMdCloseCircle onClick={onClose}/></p>
+    </div>
+);
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
-    const navigate = useNavigate(); // Use useNavigate correctly
+
+    const navigate = useNavigate(); 
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -31,10 +41,15 @@ const LoginForm = () => {
             });
             const result = await response.json();
             if (result.user._id) {
-                navigate("../portal");
+                setShowSuccessPopup(true);
+                setTimeout(()=>{
+                    navigate('/portal');
+                },1000);
                 const user = JSON.stringify(result.user);
+                console.log(user)
                 localStorage.setItem("user", user);
-                localStorage.setItem("token", result.token); // Store the token correctly
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("isAuthenticated", result.isauthenticated); // Store the token correctly
             } else {
                 console.error("Login failed");
             }
@@ -48,10 +63,6 @@ const LoginForm = () => {
         if (e.key === "Enter") {
             submit(e); // Call the submit function on Enter key press
         }
-    };
-
-    const handleSigninClick = () => {
-        navigate("/register");
     };
 
     return (
@@ -85,8 +96,9 @@ const LoginForm = () => {
                             <TbShieldLockFilled className='FaIcon' />
                         </div>
                         <button type='button' onClick={submit}>Login</button>
+                        {showSuccessPopup && <SuccessPopup onClose={() => setShowSuccessPopup(false)} show={showSuccessPopup} />}
                         <div className="register-link">
-                            <p>Ready to Dive In? <Link to="/register">Register here</Link></p>
+                            <p>Haven't created an account? <Link to="/register">Register here</Link></p>
                         </div>
                     </form>
                 </div>
