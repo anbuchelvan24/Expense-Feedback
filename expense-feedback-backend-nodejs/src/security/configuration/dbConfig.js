@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://0.0.0.0:27017/jwt_db",{
+mongoose.connect("mongodb://localhost:27017/jwt_db",{
     serverSelectionTimeoutMS:5000
 });
 
