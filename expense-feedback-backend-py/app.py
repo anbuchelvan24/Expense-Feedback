@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from prompt_creation import promptcreation
 from query_rag import query_rag
@@ -31,12 +31,9 @@ def submit_expense():
                         f"Tax posted amount: {tax_posted_amount},\n" \
                         f"Comment: {comment},\n" \
                         f"Personal expense: {personal_expense}"
-                        
-    response_from_query_rag = query_rag(promptcreation(formatted_expense))
-    print(response_from_query_rag)
 
     # Return response including the success message and the response from query_rag
-    return response_from_query_rag
+    return Response(query_rag(promptcreation(formatted_expense)), mimetype='text/plain')
 
 if __name__ == '__main__':
     app.run(debug=True)

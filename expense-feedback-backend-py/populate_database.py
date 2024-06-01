@@ -2,7 +2,7 @@ import argparse
 import os
 import shutil
 from langchain.document_loaders.pdf import PyPDFDirectoryLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_text_splitters import TokenTextSplitter
 from langchain.schema.document import Document
 from get_embedding_function import get_embedding_function
 from langchain.vectorstores.chroma import Chroma
@@ -19,10 +19,10 @@ def main():
     parser.add_argument("--reset", action="store_true", help="Reset the database.")
     args = parser.parse_args()
     if args.reset:
-        print("✨ Clearing Database")
+        print("\nClearing Database..")
         clear_database()
+        print("Done!")
 
-    # Create (or update) the data store.
     documents = load_documents()
     chunks = split_documents(documents)
     add_to_chroma(chunks)
@@ -34,11 +34,9 @@ def load_documents():
 
 
 def split_documents(documents: list[Document]):
-    text_splitter = RecursiveCharacterTextSplitter(
+    text_splitter = TokenTextSplitter(
         chunk_size=800,
         chunk_overlap=80,
-        length_function=len,
-        is_separator_regex=False,
     )
     return text_splitter.split_documents(documents)
 
@@ -68,7 +66,7 @@ def add_to_chroma(chunks: list[Document]):
         new_chunk_ids = [chunk.metadata["id"] for chunk in new_chunks]
         db.add_documents(new_chunks, ids=new_chunk_ids)
     else:
-        print("✅ No new documents to add")
+        print("No new documents to add\n")
 
 
 def calculate_chunk_ids(chunks):

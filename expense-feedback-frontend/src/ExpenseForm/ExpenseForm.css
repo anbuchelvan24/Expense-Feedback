@@ -10,6 +10,22 @@
   color: red;
 } 
 
+.navbar-fixed {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
+}
+
+.container-scrollable {
+  margin-top: 80px;
+  background-color: white;
+  border-radius: 1px;
+  overflow-y: auto;
+  height: calc(100vh - 80px);
+}
+
 
 .overall-container{
     display: flex;

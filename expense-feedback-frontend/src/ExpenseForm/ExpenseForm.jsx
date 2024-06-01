@@ -9,6 +9,10 @@ import { PermMedia } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import './ExpenseForm.css';
 import Navbar from '../Navbar/Navbar';
+import InputAdornment from '@mui/material/InputAdornment';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+
+
 
 function ExpenseForm() {
 
@@ -19,11 +23,11 @@ function ExpenseForm() {
     businessPurpose: '',
     vendorDescription: '',
     city: '',
-    paymentType: 'Cash',
-    amount: '150.00',
-    currency: 'Euro (EUR)',
+    paymentType: '',
+    amount: '',
+    currency: '',
     taxAndPostedAmount: '',
-    personalExpense: '',
+    personalExpense: false,
     comment: '',
   });
   const [receiptFile, setReceiptFile] = useState(null);
@@ -62,15 +66,16 @@ function ExpenseForm() {
   },[]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type,checked } = e.target;
     setFormData(prevState => ({
       ...prevState,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFeedback('');
     const expenseData = {
       ...formData
     };
@@ -78,19 +83,18 @@ function ExpenseForm() {
     try {
       if (receiptFile) {
         const formData = new FormData();
-        formData.append('file', receiptFile); // Append the file to FormData
+        formData.append('file', receiptFile);
         const uploadResponse = await axios.post('http://localhost:3000/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
-        expenseData.receiptFileId = uploadResponse.data; // Access the uploaded file ID
+        expenseData.receiptFileId = uploadResponse.data;
       }
 
       const response = await axios.post('http://127.0.0.1:5000/submit-expense', expenseData);
       console.log(response.data);
 
-      // Update state to display the response in the feedback box
       setFeedback(response.data);
 
   } catch (error) {
@@ -102,7 +106,10 @@ function ExpenseForm() {
   return (
     isAuthenticated ? (
       <>
-        <Navbar />
+        <div className="navbar-fixed">
+          <Navbar />
+        </div>
+        <div className='container-scrollable'>
         <Container style={{ backgroundColor: 'white', padding: '20px', borderRadius: '1px' }}>
         <Typography variant="h4" align="center" style={{ fontFamily: 'Poppins', color: '#042a2f',fontFamily: 'Josefin Sans' }}>
         EXPENSE REPORT
@@ -124,9 +131,13 @@ function ExpenseForm() {
                 onChange={handleChange}
                 InputLabelProps={{ shrink: true }}
                 InputProps={{
-                  style: {
-                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' // Example shadow effect
-                  }
+                  startAdornment: (
+                    <InputAdornment position="start">
+                    </InputAdornment>
+              ),
+              style: {
+                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)'
+              }
                 }}
                 required
               />
@@ -162,7 +173,7 @@ function ExpenseForm() {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="City"
+                label="Location/ Destination"
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
@@ -175,7 +186,7 @@ function ExpenseForm() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth style={{boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)'}}>
-                <InputLabel style={{backgroundColor:'white'}}>Payment Type <span style={{ color: 'red' }}>*</span></InputLabel>
+                <InputLabel style={{backgroundColor: 'white'}}>Payment Type <span style={{ color: 'red' }}>*</span></InputLabel>
                 <Select
                   name="paymentType"
                   value={formData.paymentType}
@@ -191,7 +202,7 @@ function ExpenseForm() {
             <Grid item xs={12} sm={6}>
               <TextField className='label-required'
                 fullWidth
-                label={<span>Amount</span>}
+                label={<span>Total Amount ( including tax )</span>}
                 name="amount"
                 value={formData.amount}
                 onChange={handleChange}
@@ -222,7 +233,7 @@ function ExpenseForm() {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Tax & Posted Amount"
+                label="Tax"
                 name="taxAndPostedAmount"
                 value={formData.taxAndPostedAmount}
                 onChange={handleChange}
@@ -239,6 +250,7 @@ function ExpenseForm() {
               <FormControlLabel
                 control={                  
                   <Checkbox
+                    value={formData.personalExpense}
                     checked={formData.personalExpense}
                     onChange={handleChange}
                     name="personalExpense"
@@ -287,7 +299,7 @@ function ExpenseForm() {
         </form>
         <div style={{ marginLeft: '20px', marginTop: '45px' }}>
           <Grid item xs={12}>
-            <Box className="feedback" border={1} p={2} borderRadius={1} textAlign="center" style={{ marginTop: '3vh', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)', height: '73vh', width: '25vw', backgroundColor: 'white', color: '#042a2f', overflowY: 'scroll', borderColor: '#b0b0b0' }}>
+          <Box className="feedback" border={1} p={2} borderRadius={1} textAlign="center" style={{ marginTop: '3vh', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)', height: '73vh', width: '25vw', backgroundColor: 'white', color: '#042a2f', overflowY: 'scroll', borderColor: '#b0b0b0' }}>
               <Typography variant="h6" gutterBottom style={{ fontFamily: 'Poppins', color: '#042a2f' }}>
                 Feedback
                 {/* <hr style={{height: '2px', backgroundColor: '#042a2f', borderRadius: '3px', width: '8vh', marginLeft: '20vh'}}></hr> */}
@@ -310,6 +322,7 @@ function ExpenseForm() {
         </div>
       </div>
     </Container>
+        </div>
       </>
     ) : (
       <Typography variant="h6" align="center" style={{ fontFamily: 'Poppins', color: '#042a2f' }}>

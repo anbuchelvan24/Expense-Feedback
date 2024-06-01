@@ -9,8 +9,18 @@ import { IoMdCloseCircle } from "react-icons/io";
 
 const SuccessPopup = ({ onClose, show }) => (
     <div className={`success-popup ${show ? 'fade-in' : ''}`}>
-      <p>User logged in successfully!  <IoMdCloseCircle onClick={onClose}/></p>
+        <p>User logged in successfully!  </p>
+        <IoMdCloseCircle onClick={onClose}/>
     </div>
+
+);
+
+const ErrorPopup = ({ onClose, show }) => (
+    <div className={`error-popup ${show ? 'fade-in' : ''}`}>
+        <p>Check credentials again!  </p>
+        <IoMdCloseCircle onClick={onClose}/>
+    </div>
+
 );
 
 const LoginForm = () => {
@@ -19,7 +29,7 @@ const LoginForm = () => {
         password: ''
     });
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
 
     const navigate = useNavigate(); 
 
@@ -39,25 +49,36 @@ const LoginForm = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
+    
+            if (!response.ok) { // Check if response is not OK (status not in the range 200-299)
+                setShowErrorPopup(true);
+                throw new Error('Login failed'); // Throw error to be caught in the catch block
+            }
+    
             const result = await response.json();
-            if (result.user._id) {
+    
+            if (result.user && result.user._id) {
                 setShowSuccessPopup(true);
-                setTimeout(()=>{
+                setTimeout(() => {
                     navigate('/portal');
-                },1000);
+                }, 1000);
+    
                 const user = JSON.stringify(result.user);
-                console.log(user)
+                console.log(user);
                 localStorage.setItem("user", user);
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("isAuthenticated", result.isauthenticated); // Store the token correctly
             } else {
+                setShowErrorPopup(true);
                 console.error("Login failed");
             }
             console.log(result);
         } catch (error) {
             console.error(error.message);
+            setShowErrorPopup(true); // Ensure error popup shows on catch
         }
     };
+    
 
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
@@ -97,6 +118,7 @@ const LoginForm = () => {
                         </div>
                         <button type='button' onClick={submit}>Login</button>
                         {showSuccessPopup && <SuccessPopup onClose={() => setShowSuccessPopup(false)} show={showSuccessPopup} />}
+                        {showErrorPopup && <ErrorPopup onClose={() => setShowErrorPopup(false)} show={showErrorPopup} />}
                         <div className="register-link">
                             <p>Haven't created an account? <Link to="/register">Register here</Link></p>
                         </div>

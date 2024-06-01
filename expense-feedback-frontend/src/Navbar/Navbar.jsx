@@ -2,6 +2,10 @@ import React from 'react';
 import { MdExitToApp } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css'
+import { 
+  Container, Typography, TextField, FormControl, InputLabel, 
+  Select, MenuItem, Grid, Box, IconButton, Button, Checkbox, FormControlLabel 
+} from '@mui/material';
 import logo from '../assets/CostoSight.png';
 
 const NavBar = () => {
@@ -18,21 +22,16 @@ const NavBar = () => {
 
   return (
     <nav className='main-nav'>
-      <img className="navbar-logo" src={logo} alt="logo"/>
+      <a href='/home'>
+        <img className="navbar-logo" src={logo} alt="logo" />
+      </a>
       <ul className="menu">
         <li>
           <button
+            className='logout-button'
             onClick={handleLogout}
             style={{
-              display: 'flex',
-              color: 'white',
-              alignItems: 'center',
-              gap: '3px',
-              backgroundColor: 'red',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              paddingTop: '3px',
-              paddingBottom: '3px'
+              
             }}
           >
             Logout <MdExitToApp style={{ height: '20px', width: 'auto' }} />

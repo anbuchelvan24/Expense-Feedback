@@ -12,13 +12,23 @@ import { IoMdCloseCircle } from "react-icons/io";
 
 const SuccessPopup = ({ onClose, show }) => (
     <div className={`success-popup ${show ? 'fade-in' : ''}`}>
-      <p>User registered successfully!  <IoMdCloseCircle onClick={onClose}/></p>
+      <p>User registered successfully!</p>
+      <IoMdCloseCircle onClick={onClose}/>
     </div>
+);
+
+const ErrorPopup = ({ onClose, show }) => (
+    <div className={`error-popup ${show ? 'fade-in' : ''}`}>
+        <p>Check credentials again!  </p>
+        <IoMdCloseCircle onClick={onClose}/>
+    </div>
+
 );
 
 const RegisterForm = () => {
     const navigate = useNavigate();
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -42,17 +52,26 @@ const RegisterForm = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
+
+            if (!response.ok) {
+                setShowErrorPopup(true);
+                throw new Error('Registration Failed! '); 
+            }
+
             const result = await response.json();
-            if (result.user._id) {
+
+            if (result.user._id && result.user._id) {
                 setShowSuccessPopup(true);
                 setTimeout(() => {
                     navigate("/login");
                 }, 1000);
             } else {
+                setShowErrorPopup(true);
                 console.error("Signup failed");
             }
             console.log(result);
         } catch (error) {
+            setShowErrorPopup(true);
             console.error(error.message);
         }
     };
@@ -94,7 +113,7 @@ const RegisterForm = () => {
                             value={formData.firstName}
                             onChange={handleInputChange}
                         />
-                        <IoPlanet className='FaIcon' />
+                        {/* <IoPlanet className='FaIcon' /> */}
                     </div>
                     <div className="input-box">
                         <input
@@ -105,10 +124,11 @@ const RegisterForm = () => {
                             value={formData.lastName}
                             onChange={handleInputChange}
                         />
-                        <RiTeamFill className='FaIcon' />
+                        {/* <RiTeamFill className='FaIcon' /> */}
                     </div>
                     <button type='submit'>Register</button>
-                    {showSuccessPopup && <SuccessPopup onClose={() => setShowSuccessPopup(false)} show={showSuccessPopup} />}                    
+                    {showSuccessPopup && <SuccessPopup onClose={() => setShowSuccessPopup(false)} show={showSuccessPopup} />}
+                    {showErrorPopup && <ErrorPopup onClose={() => setShowErrorPopup(false)} show={showErrorPopup} />}                    
                     <div className="register-link" style={{display: 'flex',justifyContent:'flex-end'}}>
                         <p>Already Registered? <Link to="/login">Login</Link></p>
                     </div>

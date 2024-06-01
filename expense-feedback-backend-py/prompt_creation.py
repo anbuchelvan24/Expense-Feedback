@@ -6,13 +6,12 @@ import ollama
 from get_embedding_function import get_embedding_function
 
 PROMPT_TEMPLATE = """
-[THE RESPONSE MUST BE VERY PERFECT! DON'T HALLUCINATE YOURSELF. GIVE RESPONSES ONLY BASED ON INFORMATION YOU GET BELOW]
+Current Date: 01/06/2024 (DD/MM/YYYY)
 Minimum words: 200 words and Maximum words: 400 words
-You are a feedback generator. The user is asking about reimbursements validation. Provide a detailed and informative response based on the latest information available. Make sure to cover the following points:
+You are a feedback generator working for SAP. The user is asking about reimbursements validation. Provide a detailed and informative response based on the latest information available. Make sure to UNDERSTAND the following points:
 {context}
-Ensure your response is clear and concise.
-At first, let the user know whether it's reimbursable or not clearly and shortly.
-Query:
+Ensure your response is in proper format so that I can just print it in the frontend without formatting.
+Query and Data:
 {query}
 """
 
@@ -25,37 +24,33 @@ def promptcreation(formatted_expense):
 
     # Prepare the query text with formatted data
     query_text = """
-    You have been provided with the following query and data:
-
-    Query:
-    "Is this expense data enough? If not, what else is important to be provided? Is this reimbursable by company policies?"
 
     Data from Expense Form:
     {form_data}
-    If personal expense is "on" then it's not reimbursable else proceed with the following.
+    Date in expense form data will be in MM/DD/YYYY
+    If personal expense is true then it's not reimbursable else proceed with the following.
 
-    Data from Receipts of expenses from Bills/Receipts by OCR:
-    From the below data recognize amounts, business purpose, transaction date, payment type, city, vendor company name, currency type. These will be the only things that will be available in the receipt.
-    If the data below doesn't look like data from receipts, generate a negative prompt that says "Need relevant recept data for reimbursement" (Exact words)
+    Data of expenses from Bills/Receipts by OCR:
+    From the below data recognize amounts, business purpose, transaction date, payment type, city, vendor company name, currency type.
+    If the data below doesn't look like data from receipts, generate a negative prompt that says "Need relevant recept data for reimbursement".
     Total amount will be in the bill, you don't have to calculate.
+    OCR data will not have the data to determine whether it's personal expense or noot.
     {ocr_data}
 
     Rules:
-    1. Receipts/Bills data is not required to mention whether it was an personal expense or not.
-    2. Comments are not very important.
-    3. You must be very strict with the data as it involves money.
-    4. The bills must have itemizations (items that have been purchased)
-    5. If no currency type is given in receipt, default to Indian Rupees ₹. If given, the currency type from expense form and currency type from receipts must match.
-    6. If no payment type is provided, default to Cash
-
-    Answer the following questions based on the provided context and RULES strictly and you should not hallucinate:
-
+    1. If data from expense form and receipts don't match perfectly and fully, then the expense is not reimbursable so say no and exit here.
+    2. Receipts/Bills data is not required to mention whether it was an personal expense or not.
+    3. Comments are not very important.
+    4. You must be very strict with the data as it involves money.
+    5. The bills must have itemizations (items that have been purchased)
+    6. If no currency type is given in receipt, default to Indian Rupees ₹. If given, the currency type from expense form and currency type from receipts must match.
+    7. If no payment type is provided, default to Cash.
+    8. Check for time in the bill. Use common sense to analyze the form and receipt data together. For example, if in bill it's 10:00pm and form data says it's dinner, that's an contradiction.
+    
+    Answer the following questions based on the provided context and RULES strictly:
     1. Is this expense reimbursable? Yes or No?
     2. Do these expenses comply with company policies regarding reimbursement?
     3. Do the data from the expense form match those obtained by Bills/Receipts from the receipt images exactly? 
-    If it doesn't, what data doesn't match? 
-    Does the amount match? Display the amounts, business purpose, transaction date, payment type, city, vendor company name, currency type, personal expense from both the form and OCR if they don't match.
-    4. Is there any important information missing in the provided data?
     """.format(ocr_data=ocr_data, form_data=formatted_expense)
 
     # Combine data for embedding search
@@ -75,7 +70,6 @@ def promptcreation(formatted_expense):
     Answer the following questions based on the provided context and RULES strictly and you should not hallucinate:
     1. Do these expenses comply with company policies regarding reimbursement?
     2. Do the data from the expense form strictly match those recgognized from Bills/Receipts exactly?  If it doesn't, what data doesn't match? 
-    4. Does the amount match? Display the amounts, business purpose, transaction date, payment type, city, vendor company name, currency type, personal expense from both the form and OCR if they don't match.
     3. Is there any important information missing in the provided data?
     """.format(form_data=formatted_expense, ocr_data=ocr_data)
 
