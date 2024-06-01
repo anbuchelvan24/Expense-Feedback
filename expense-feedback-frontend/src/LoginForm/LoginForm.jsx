@@ -1,88 +1,126 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import './LoginForm.css';
-
 import { TbShieldLockFilled } from "react-icons/tb";
 import { FaUserAstronaut } from "react-icons/fa6";
+import logo from '../assets/Claim AI.png';
+import { IoMdCloseCircle } from "react-icons/io";
+
+
+const SuccessPopup = ({ onClose, show }) => (
+    <div className={`success-popup ${show ? 'fade-in' : ''}`}>
+        <p>User logged in successfully!  </p>
+        <IoMdCloseCircle onClick={onClose}/>
+    </div>
+
+);
+
+const ErrorPopup = ({ onClose, show }) => (
+    <div className={`error-popup ${show ? 'fade-in' : ''}`}>
+        <p>Check credentials again!  </p>
+        <IoMdCloseCircle onClick={onClose}/>
+    </div>
+
+);
 
 const LoginForm = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
+
+    const navigate = useNavigate(); 
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const submit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://localhost:5000/auth/login", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+    
+            if (!response.ok) { // Check if response is not OK (status not in the range 200-299)
+                setShowErrorPopup(true);
+                throw new Error('Login failed'); // Throw error to be caught in the catch block
+            }
+    
+            const result = await response.json();
+    
+            if (result.user && result.user._id) {
+                setShowSuccessPopup(true);
+                setTimeout(() => {
+                    navigate('/portal');
+                }, 1000);
+    
+                const user = JSON.stringify(result.user);
+                console.log(user);
+                localStorage.setItem("user", user);
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("isAuthenticated", result.isauthenticated); // Store the token correctly
+            } else {
+                setShowErrorPopup(true);
+                console.error("Login failed");
+            }
+            console.log(result);
+        } catch (error) {
+            console.error(error.message);
+            setShowErrorPopup(true); // Ensure error popup shows on catch
+        }
+    };
+    
 
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
-            handleLogin();
+            submit(e); // Call the submit function on Enter key press
         }
-    }
-
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        const isValidEmail = () => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        if (!isValidEmail()) {
-            window.alert("Enter a Valid Email");
-            return;
-        }
-
-        // try {
-        //     const response = await axios.post('http://localhost:8080/login', {
-        //         email: email,
-        //         password: password
-        //     });
-
-        //     const authorized = response.data;
-            
-        //     if(authorized)
-        //     {
-        //         alert("Logged in successfully !");
-
-        //         navigate('/polls');
-        //     }
-        //     else{
-        //         alert("Login Attempt failed !")
-        //     }
-
-        // } catch (error) {
-        //     console.error(error);
-        // }
-    }
+    };
 
     return (
         <>
             <div className='overall-login'>
                 <div className='wrapper'>
                     <form className="entryform">
-                        <h1>Expense Feedback</h1>
+                        <img src={logo} alt="CostoSight Logo" />
                         <div className="input-box">
                             <input
                                 type='text'
+                                name="email"
                                 placeholder='Email ID'
                                 required
-                                value={email}
+                                value={formData.email}
                                 onKeyDown={handleKeyPress}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleInputChange}
                             />
-                            <FaUserAstronaut className='FaIcon'/>
+                            <FaUserAstronaut className='FaIcon' />
                         </div>
                         <div className="input-box">
                             <input
                                 type='password'
+                                name="password"
                                 placeholder='Password'
                                 required
-                                value={password}
+                                value={formData.password}
                                 onKeyDown={handleKeyPress}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={handleInputChange}
                             />
-                            <TbShieldLockFilled className='FaIcon'/>
+                            <TbShieldLockFilled className='FaIcon' />
                         </div>
-                        <button type='button' onClick={handleLogin}>Login</button>
+                        <button type='button' onClick={submit}>Login</button>
+                        {showSuccessPopup && <SuccessPopup onClose={() => setShowSuccessPopup(false)} show={showSuccessPopup} />}
+                        {showErrorPopup && <ErrorPopup onClose={() => setShowErrorPopup(false)} show={showErrorPopup} />}
                         <div className="register-link">
-                            <p>Ready to Dive In? <a href="/register">Register here</a></p>
+                            <p>Haven't created an account? <Link to="/register">Register here</Link></p>
                         </div>
                     </form>
                 </div>

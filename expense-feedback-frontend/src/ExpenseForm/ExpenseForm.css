@@ -1,0 +1,86 @@
+@media (prefers-color-scheme: dark) {
+  body {
+      background-color: darkgrey;
+      margin: 0px;
+      padding: 0px;
+  }
+}
+
+.label-required .MuiInputLabel-asterisk {
+  color: red;
+} 
+
+.navbar-fixed {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
+}
+
+.container-scrollable {
+  margin-top: 80px;
+  background-color: white;
+  border-radius: 1px;
+  overflow-y: auto;
+  height: calc(100vh - 80px);
+}
+
+
+.overall-container{
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: 100%;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+} 
+
+.feedback::-webkit-scrollbar {
+    width: 0.5em;
+  }
+   
+.feedback::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+   
+.feedback::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid rgb(0, 128, 255);
+    border-radius: 10px;
+    height: 50px; /* Adjust the height to your desired value */
+}
+
+#submit-button:hover {
+  transition-duration: 0.2s;
+  background-color: #042a2f;
+}
+
+#submit-button:after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top: 2vh;
+  width: 100%;
+  height: 40%;
+  opacity: 0;
+  transition: all 0.5s;
+  box-shadow: 0 0 10px 40px #042a2f;
+}
+
+#submit-button:active:after {
+  box-shadow: 0 0 0 0 #042a2f;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  opacity: 1;
+  transition: 0s;
+}
+
+#submit-button:active {
+  top: 1px;
+}

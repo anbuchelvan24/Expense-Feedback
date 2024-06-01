@@ -1,0 +1,14 @@
+In last video we have seen how to show pdf page.
+In this video we will see how we can change page 
+number and show different pages from pdf
+
+
+1. For icons i will install react-icons
+2. now will copy button css and jsx from my old project.
+3. i will create a function for changing page number
+3. now I will add a indicator on left side which will show current page displayed on right side.
+4. On left side, on page click it will show that clicked page on right side.
+
+Thanks for watching
+Please
+SUBSCRIBE & SHARE & LIKE

@@ -1,37 +1,117 @@
 .menu{
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
     flex-direction: row-reverse;
 }
 
-.menu li{
+.menu li,
+.menu p{
     padding: 20px 0px;
-    margin: 0px 15px;
+    margin: 0px 10px;
     list-style: none;
 }
 
-.menu li a{
+.menu li a,
+.menu p{
     color: lightgray;
+    transition: .3s;
 }
 
-.menu li a:hover{
-    color: white;
-    transition: all 0.3s ease-in-out;
+.menu li a:hover,
+.menu p:hover{
+    color: aqua;
 }
 
 .main-nav{
     background-color: black;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    overflow-x: hidden;
 }
 
-FiUser{
+.main-nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .4), transparent);
+    transition: .5s;
+}
+.main-nav:hover::before {
+    left: 100%;
+}
+
+.TiArrowSortedDown{
     color: white;
+    margin-top: 3px;
+    cursor: pointer;
 }
 
 @media (prefers-color-scheme: light){
-    .menu li a{
+    .menu li a,
+    .menu p{
         color: lightgray;
+        transition: .3s;
     }
+
 
     .main-nav{
         background-color: black;
     }
 }
+
+.navbar-logo{
+    width: 150px;
+    height: auto;
+    margin-left: 15px;
+}
+
+.dropdown-menu {
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    align-items: flex-end;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+  
+.dropdown-menu li {
+    list-style: none;
+}
+  
+.dropdown-menu button {
+    background-color: transparent;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+  
+.dropdown-menu button:hover {
+    background-color: #f1f1f1;
+}
+
+.logout-button{
+    display: flex;
+    color: white;
+    align-items: center;
+    gap: 3px;
+    background-color: red;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.logout-button:hover{
+    background-color: rgb(152, 25, 25);
+}
+  

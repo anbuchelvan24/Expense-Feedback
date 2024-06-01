@@ -1,0 +1,130 @@
+.main2 {
+  background-image: url('../assets/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  opacity: 0.9;
+  /* Apply blur effect */
+}
+
+
+.inside {
+  border-radius: 60px;
+  padding: 40px;
+  color: white;
+  text-align: center;
+  width: 60vw;
+  margin-top: 80px;
+  background: transparent;
+  position: relative;
+}
+
+.inside::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  backdrop-filter: blur(10px);
+  z-index: -1;
+}
+
+
+.logo-container {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+
+.button-container button a{
+  padding: 8px 16px;
+  font-size: 1em;
+  border: none;
+  cursor: pointer;
+}
+
+.policies-button {
+  color: white;
+  background-color: transparent;
+  text-decoration: underline;
+  font-size: medium;
+}
+
+.sign-in-button {
+  color: white; /* White text color */
+  background-color: transparent; /* Transparent background */
+  text-decoration: underline; /* Underline style to mimic a link */
+}
+
+.info-container {
+  background: transparent;
+  border-radius: 60px;
+  padding: 20px;
+  padding-bottom: 30px;
+  border-radius: 30px;
+  margin-top: 50px;
+  text-align: center; /* Align content to the center */
+}
+
+.heading {
+  color: white;
+  font-size: 2em;
+  margin-bottom: 10px;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.sub-content {
+  color: #f0f0f0;
+  font-size: 1.2em;
+  margin-left: 80px;
+  margin-right: 80px;
+}
+
+.button-container-start {
+  text-align: center; /* Align the button in the center */
+  margin-top: 20px; /* Add some space between the container and the button */
+}
+
+.get-started-button {
+  background-color: #b816b0; /* Blue background color */
+  color: white; /* White text color */
+  padding: 10px 20px; /* Add padding */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Add some border-radius */
+  font-size: 1em; /* Adjust font size */
+  cursor: pointer; /* Change cursor on hover */
+  margin-top: 40px;
+}
+
+.get-started-button:hover {
+  background-color: #9c0331; /* Darker blue color on hover */
+}
+
+
+
+
+
+
+
+
