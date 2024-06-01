@@ -101,6 +101,12 @@
   margin-right: 80px;
 }
 
+.hello-message{
+  font-size: 30px;
+  font-family: "Josefin Sans", sans-serif;
+  margin-bottom: 7px;
+}
+
 .button-container-start {
   text-align: center; /* Align the button in the center */
   margin-top: 20px; /* Add some space between the container and the button */

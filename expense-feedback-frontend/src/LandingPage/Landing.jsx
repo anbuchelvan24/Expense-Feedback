@@ -8,6 +8,7 @@ import logo from '../assets/CostoSight.png';
 const Landing = () => {
 
   const isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
+  const user=JSON.parse(localStorage.getItem("user"));
 
     return (
         <div className="main2">
@@ -21,6 +22,9 @@ const Landing = () => {
 
           <div className="inside">
             <div className="info-container">
+                {user&& user.firstName && (
+                <p className="hello-message">Hey, {user.firstName}</p>
+                )}
                 <h2 className="heading">"Elevate Expense Insights:
                                             Empower Your Reports!"</h2><br></br>
                 <p className="sub-content">Effortlessly streamline expense reporting with AI-driven insights, empowering informed decision-making and optimizing financial management.</p>
