@@ -60,7 +60,7 @@ const LoginForm = () => {
             if (result.user && result.user._id) {
                 setShowSuccessPopup(true);
                 setTimeout(() => {
-                    navigate('/portal');
+                    navigate('/home');
                 }, 1000);
     
                 const user = JSON.stringify(result.user);

@@ -7,6 +7,8 @@ import logo from '../assets/CostoSight.png';
 
 const Landing = () => {
 
+  const isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
+
     return (
         <div className="main2">
             <div className="logo-container">
@@ -14,7 +16,7 @@ const Landing = () => {
             </div>
             <div className="button-container">
                 <button className="policies-button"><a href="/policies" style={{color: 'white'}}>Policies</a></button>
-                <button className="sign-in-button"><a href="/login" style={{color: 'white'}}>Sign in</a></button>
+                {!isAuthenticated?(<button className="sign-in-button"><a href="/login" style={{color: 'white'}}>Sign in</a></button>):<button className="sign-in-button"><a href="/portal" style={{color: 'white'}}>Feedback Generator</a></button>}
             </div>
 
           <div className="inside">

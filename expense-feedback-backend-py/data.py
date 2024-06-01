@@ -16,10 +16,9 @@ def ocr_text_detection():
     db = client['files']
 
     fs_files = db['uploads.files']
-    fs_chunks = db['uploads.chunks']  # Collection for file chunks
+    fs_chunks = db['uploads.chunks'] 
 
-# Retrieve the file metadata
-    file_id = ObjectId(response.text)  # change this to the id in your db
+    file_id = ObjectId(response.text)
 
     file = fs_files.find_one({'_id': file_id})
     if not file:
@@ -36,17 +35,12 @@ def ocr_text_detection():
 
     reconstructed_file.seek(0)
 
-    # Check if the file is a PDF
     if file['contentType'] == 'application/pdf':
-        # Convert PDF to images
         images = convert_from_bytes(reconstructed_file.read(), fmt='jpeg')
-        
         text = ""
-        # Process each page image using PyTesseract
         for image in images:
             text += pytesseract.image_to_string(image)
     else:
-        # Process other file types as images using PyTesseract
         text = pytesseract.image_to_string(Image.open(reconstructed_file))
     
     print(text)

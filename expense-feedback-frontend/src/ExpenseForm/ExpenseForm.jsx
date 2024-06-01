@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { 
   Container, Typography, TextField, FormControl, InputLabel, 
-  Select, MenuItem, Grid, Box, IconButton, Button, Checkbox, FormControlLabel 
+  Select, MenuItem, Grid, Box, IconButton, Button, Checkbox, FormControlLabel, CircularProgress 
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { PermMedia } from '@mui/icons-material';
@@ -34,6 +34,9 @@ function ExpenseForm() {
   const [filename, setFilename] = useState('');
   const [feedback, setFeedback] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [fileError, setFileError] = useState('');
+
 
   const paymentOptions = ['Cash', 'Credit Card', 'Debit Card', 'UPI', 'Other'];
   const currencyOptions = [
@@ -48,6 +51,7 @@ function ExpenseForm() {
   const onDrop = (acceptedFiles) => {
     setReceiptFile(acceptedFiles[0]);
     setFilename(acceptedFiles[0].name);
+    setFileError('');
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -76,12 +80,19 @@ function ExpenseForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFeedback('');
+    setIsLoading(true);
+
+    if (!receiptFile) {
+      setFileError('Please upload a receipt file.'); // Set file error if no file is uploaded
+      setIsLoading(false);
+      return;
+    }
+
     const expenseData = {
       ...formData
     };
 
     try {
-      if (receiptFile) {
         const formData = new FormData();
         formData.append('file', receiptFile);
         const uploadResponse = await axios.post('http://localhost:3000/upload', formData, {
@@ -90,15 +101,16 @@ function ExpenseForm() {
           }
         });
         expenseData.receiptFileId = uploadResponse.data;
-      }
 
       const response = await axios.post('http://127.0.0.1:5000/submit-expense', expenseData);
       console.log(response.data);
 
       setFeedback(response.data);
+      setIsLoading(false);
 
   } catch (error) {
     console.error('Error:', error);
+    setIsLoading(false);
   }
 };
 
@@ -288,6 +300,7 @@ function ExpenseForm() {
                 <input {...getInputProps()} />
                 <Typography variant="body1" style={{ fontFamily: 'Poppins', color: '#042a2f' }}>{filename ? `File uploaded: ${filename}` : 'Upload or drag files here.'}</Typography>
                 <Typography variant="body2" style={{ fontFamily: 'Poppins', color: '#042a2f', opacity: 0.6 }}>Supports: .png, .jpg, .jpeg, .pdf, .tif, .tiff</Typography>
+                {fileError && <Typography variant="body2" style={{ fontFamily:'poppins', color: 'red', marginTop: '10px' }}>{fileError}</Typography>}
               </Box>
             </Grid>
             <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
@@ -305,18 +318,21 @@ function ExpenseForm() {
                 {/* <hr style={{height: '2px', backgroundColor: '#042a2f', borderRadius: '3px', width: '8vh', marginLeft: '20vh'}}></hr> */}
               </Typography>
 
-              {feedback === '' && (
+              {feedback === '' && isLoading==false && (
                 <div style={{ opacity: 0.8, marginTop: '32vh' }}>
                   <Typography variant="body2" style={{ fontFamily: 'Poppins', color: '#042a2f', opacity: 0.6 }}>Your feedback will be accessible here.</Typography>
                 </div>
               )}
-
-              {feedback.split('\n').map((point, index) => (
-                <Typography key={index} variant="body1" style={{ fontFamily: 'Poppins', color: '#042a2f' }}>
-                  <div style={{ marginBottom: '30px' }}></div>
-                  {point}
-                </Typography>
-              ))}
+              {isLoading ? (
+                <CircularProgress style={{ marginTop: '32vh', color: '#042a2f' }} />
+              ) : (
+                feedback.split('\n').map((point, index) => (
+                  <Typography key={index} variant="body1" style={{ fontFamily: 'Poppins', color: '#042a2f' }}>
+                    <div style={{ marginBottom: '30px' }}></div>
+                    {point}
+                  </Typography>
+                ))
+              )}
             </Box>
           </Grid>
         </div>
