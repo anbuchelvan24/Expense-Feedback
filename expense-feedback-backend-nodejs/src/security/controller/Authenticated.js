@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user");
 
 async function getUserById(req,res) {
     try {
@@ -14,3 +14,6 @@ async function getUserById(req,res) {
 }
 
 module.exports = { getUserById }; 
+
+
+
