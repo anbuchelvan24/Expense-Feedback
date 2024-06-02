@@ -43,10 +43,11 @@ const History = () => {
             <h1>User Feedback History</h1>
             {feedbacks.length > 0 ? (
                 <div className="feedback-list">
-                    {feedbacks.map(feedback => (
+                    {feedbacks.slice().reverse().map((feedback, index) => (
                         <div key={feedback.id} className="feedback-card">
                             <div className="feedback-header">
                                 <span className="feedback-date">{new Date(feedback.transactionDate).toLocaleDateString()}</span>
+                                <p>Expense Report {feedbacks.length - index}</p> {/* Printing the index */}
                                 <span className="feedback-amount">{feedback.amount} {feedback.currency}</span>
                             </div>
                             <div className="feedback-body">
@@ -58,7 +59,7 @@ const History = () => {
                                 <p><strong>Personal Expense:</strong> {feedback.personalExpense ? 'Yes' : 'No'}</p>
                                 <p><strong>Comment:</strong> {feedback.comment}</p>
                                 <div className= "feedback-scrollable">
-                                <p><strong>Feedback:</strong> {feedback.feedback}</p>
+                                <p><strong>Feedback:</strong> {feedback.response_from_query_rag}</p>
                                 </div>
                             </div>
                         </div>

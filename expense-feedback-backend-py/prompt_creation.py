@@ -8,7 +8,7 @@ from get_embedding_function import get_embedding_function
 PROMPT_TEMPLATE = """
 Current Date: 02/06/2024 (DD/MM/YYYY) Use this date and compare data from receipts and expense forms.
 Below are the rules; please adhere to them strictly.
-Your response should be between 200 to 400 words.
+Your response should be between 200 to 400 words strictly.
 
 You are a feedback generator working for SAP. The user is seeking reimbursement validation and a summary of their expense report. 
 Provide a detailed response based on the latest information available. Pay close attention to the following points:

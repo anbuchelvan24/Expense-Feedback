@@ -1,10 +1,21 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
 from prompt_creation import promptcreation
+from pymongo import MongoClient
+import os
+import gridfs
+from bson.objectid import ObjectId
+import json
+
 import ollama
 
 app = Flask(__name__)
 CORS(app)
+
+client = MongoClient("mongodb://localhost:27017/")
+db = client['jwt_db']
+users_collection = db['users']
+fs = gridfs.GridFS(db)
 
 def query_rag(prompt):
     stream = ollama.chat(
@@ -15,6 +26,7 @@ def query_rag(prompt):
     for chunk in stream:
         yield f"{chunk['message']['content']}"
 
+global result
 
 @app.route('/submit-expense', methods=['POST','GET'])
 def submit_expense():
@@ -31,6 +43,23 @@ def submit_expense():
     personal_expense = expense_data['personalExpense']
     comment = expense_data['comment']
     name=expense_data['name']
+    email=expense_data['email']
+
+    result='Hii'
+
+    formatted_expense_store = {
+        "transactionDate": transaction_date,
+        "businessPurpose": business_purpose,
+        "vendorDescription": vendor_description,
+        "city": city,
+        "paymentType": payment_type,
+        "amount": amount,
+        "currency": currency,
+        "taxAndPostedAmount": tax_posted_amount,
+        "personalExpense": personal_expense,
+        "comment": comment,
+        "response_from_query_rag": result
+    }
 
     formatted_expense = f"Transaction date: {transaction_date},\n" \
                         f"Business purpose: {business_purpose},\n" \
@@ -47,11 +76,41 @@ def submit_expense():
     print(formatted_expense)
     
     def generate():
+        nonlocal result
         prompt = promptcreation(formatted_expense)
         for chunk in query_rag(prompt):
+            result=result+chunk
             yield chunk
 
-    return generate(), {"Content-Type": "text/plain"}
+    response = Response(generate(), content_type='text/plain')
+
+    # Update the formatted_expense_store with the complete result after streaming
+    formatted_expense_store['response_from_query_rag'] = result
+    print(result)
+
+    # Update or insert the user details in the database
+    user = users_collection.find_one({"email": email})
+    if user:
+        users_collection.update_one({"email": email}, {"$push": {"details": formatted_expense_store}})
+    else:
+        users_collection.insert_one({"email": email, "details": [formatted_expense_store]})
+
+    return response
+
+@app.route('/user-expenses/<email>', methods=['GET'])
+def get_user_expenses(email):
+    user = users_collection.find_one({"email": email})
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    details = user.get("details", [])
+    for detail in details:
+        if "receiptFileId" in detail:
+            receipt_file_id = detail["receiptFileId"]
+            if receipt_file_id:
+                detail["receipt"] = f"/receipt/{receipt_file_id}"
+
+    return jsonify(details)
 
 
 if __name__ == '__main__':

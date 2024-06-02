@@ -22,6 +22,7 @@ function ExpenseForm() {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const name = user ? user.firstName : ''
+  const email = user ? user.email : ''
   
   const [formData, setFormData] = useState({
     transactionDate: '',
@@ -35,6 +36,7 @@ function ExpenseForm() {
     personalExpense: false,
     comment: '',
     name: name,
+    email: email,
   });
   const [receiptFile, setReceiptFile] = useState(null);
   const [filename, setFilename] = useState('');
@@ -117,14 +119,16 @@ function ExpenseForm() {
         }
       });
       expenseData.receiptFileId = uploadResponse.data;
-
-      const response = await fetch('http://127.0.0.1:5000/submit-expense', {
+    
+    
+    const response = await fetch('http://127.0.0.1:5000/submit-expense', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(expenseData)
-      });
+    });
+    
 
       setIsLoading(false);
       const reader = response.body.getReader();
