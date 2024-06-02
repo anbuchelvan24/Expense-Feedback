@@ -8,11 +8,10 @@ import { IoMdCloseCircle } from "react-icons/io";
 
 
 const SuccessPopup = ({ onClose, show }) => (
-    <div className={`success-popup ${show ? 'fade-in' : ''}`}>
+       <div className={`success-popup ${show ? 'fade-in' : ''}`}>
         <p>User logged in successfully!  </p>
         <IoMdCloseCircle onClick={onClose}/>
-    </div>
-
+    </div> 
 );
 
 const ErrorPopup = ({ onClose, show }) => (
@@ -58,6 +57,7 @@ const LoginForm = () => {
             const result = await response.json();
     
             if (result.user && result.user._id) {
+                setShowErrorPopup(false);
                 setShowSuccessPopup(true);
                 setTimeout(() => {
                     navigate('/home');
@@ -69,6 +69,7 @@ const LoginForm = () => {
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("isAuthenticated", result.isauthenticated); // Store the token correctly
             } else {
+                setShowSuccessPopup(false)
                 setShowErrorPopup(true);
                 console.error("Login failed");
             }
@@ -117,8 +118,8 @@ const LoginForm = () => {
                             <TbShieldLockFilled className='FaIcon' />
                         </div>
                         <button type='button' onClick={submit}>Login</button>
-                        {showSuccessPopup && <SuccessPopup onClose={() => setShowSuccessPopup(false)} show={showSuccessPopup} />}
-                        {showErrorPopup && <ErrorPopup onClose={() => setShowErrorPopup(false)} show={showErrorPopup} />}
+                        {showSuccessPopup && !showErrorPopup &&<SuccessPopup onClose={() => setShowSuccessPopup(false)} show={showSuccessPopup} />}
+                        {showErrorPopup && !showSuccessPopup && <ErrorPopup onClose={() => setShowErrorPopup(false)} show={showErrorPopup} />}
                         <div className="register-link">
                             <p>Haven't created an account? <Link to="/register">Register here</Link></p>
                         </div>
