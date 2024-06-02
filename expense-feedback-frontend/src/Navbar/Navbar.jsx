@@ -40,7 +40,11 @@ const NavBar = () => {
         </li>
         <p style={{ marginRight: '0px', color:'white' }}>Hello, {storedUser ? storedUser.firstName : "Guest"}</p>
         <li><a href='/policies'>Policies</a></li>
+        <li><a href="/history">History</a></li>
+        <li><a href="/portal">Feedback</a></li>
         <li><a href="/home">Home</a></li>
+
+
       </ul>
     </nav>
   );

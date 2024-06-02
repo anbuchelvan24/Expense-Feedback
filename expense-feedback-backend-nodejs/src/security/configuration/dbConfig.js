@@ -4,7 +4,7 @@
 const mongoose = require("mongoose");
 
 function connectDB() {
-    mongoose.connect("mongodb://localhost:27017/jwt_db", {
+    mongoose.connect("mongodb://0.0.0.0:27017/jwt_db", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         serverSelectionTimeoutMS: 5000

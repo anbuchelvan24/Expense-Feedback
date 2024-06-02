@@ -9,6 +9,7 @@ import { AuthProvider } from './service/AuthContext';
 import ProtectedRoute from './service/ProtectedRoute';
 import Viewer from './pdf/Viewer';
 import Landing from './LandingPage/Landing';
+import History from './History/History';
 
 function App() {
   const isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
@@ -29,6 +30,7 @@ function App() {
           )}
           <Route path={isAuthenticated ? './portal' : './login'} element={isAuthenticated ? <ExpenseForm /> : <LoginForm />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/History" element= {<History />} />
         </Routes>
 
     </BrowserRouter>

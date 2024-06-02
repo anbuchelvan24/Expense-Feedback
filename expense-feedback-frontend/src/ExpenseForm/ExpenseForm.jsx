@@ -5,10 +5,12 @@ import {
   Select, MenuItem, Grid, Box, IconButton, Button, Checkbox, FormControlLabel 
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
-import { PermMedia } from '@mui/icons-material';
+import { PermMedia, PowerInputSharp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import './ExpenseForm.css';
 import Navbar from '../Navbar/Navbar';
+import Popup from 'reactjs-popup';
+
 
 function ExpenseForm() {
 
@@ -84,11 +86,28 @@ function ExpenseForm() {
             'Content-Type': 'multipart/form-data'
           }
         });
+        Object.keys(expenseData).forEach(key => {
+          formData.append(key, expenseData[key]);
+          console.log(formData)
+      });
+      formData.append('receiptFile', receiptFile);
         expenseData.receiptFileId = uploadResponse.data; // Access the uploaded file ID
       }
+      const token = localStorage.getItem('token');
+      const user = localStorage.getItem('user');
+      
+      const config = {
+        headers: {
+          Authorization : token,
+          information : user,
+          file: receiptFile
+        }
+      }
 
-      const response = await axios.post('http://127.0.0.1:5000/submit-expense', expenseData);
+
+      const response = await axios.post('http://127.0.0.1:5000/submit-expense', formData ,config);
       console.log(response.data);
+      localStorage.setItem('feedback',response.data)
 
       // Update state to display the response in the feedback box
       setFeedback(response.data);
@@ -279,9 +298,18 @@ function ExpenseForm() {
               </Box>
             </Grid>
             <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button type="submit" variant="contained" style={{ marginTop: '20px', backgroundColor: '#042a2f', color: 'white' }}>
-                Generate Feedback ✨
-              </Button>
+              <Popup 
+                trigger = {open =>(
+                  <Button type="submit" variant="contained" style={{ marginTop: '20px', backgroundColor: '#042a2f', color: 'white' }}>
+                  Generate Feedback ✨
+                </Button>
+                )}
+                position = "right center"
+                closeOnDocumentClick
+                >
+                  <span>popup is shown</span>
+                </Popup>
+
             </Grid>
           </Grid>
         </form>
