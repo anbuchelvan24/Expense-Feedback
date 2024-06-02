@@ -37,8 +37,11 @@ const NavBar = () => {
             Logout <MdExitToApp style={{ height: '20px', width: 'auto' }} />
           </button>
         </li>
-        <p style={{ marginRight: '0px', color:'white' }}>Hello, {storedUser ? storedUser.firstName : "Guest"}</p>
+        <p style={{ marginRight: '0px', color:'white', fontSize: '20px',fontFamily: 'Josefin Sans' }}>Hello, {storedUser ? storedUser.firstName : "Guest"}</p>
+        <div class="vl"></div>
         <li><a href='/policies'>Policies</a></li>
+        <li><a href="/history">History</a></li>
+        <li><a href="/portal">Feedback</a></li>
         <li><a href="/home">Home</a></li>
       </ul>
     </nav>

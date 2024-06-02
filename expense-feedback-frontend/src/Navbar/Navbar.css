@@ -115,3 +115,7 @@
     background-color: rgb(152, 25, 25);
 }
   
+.vl {
+    border-left: 3px solid rgb(8, 59, 179);
+    height: 30px;
+}
