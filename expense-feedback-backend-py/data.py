@@ -10,6 +10,7 @@ import requests
 pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
 def ocr_text_detection():
+    
     response = requests.get('http://localhost:3000/id')
 
     client = MongoClient('mongodb://localhost:27017/')
@@ -43,5 +44,4 @@ def ocr_text_detection():
     else:
         text = pytesseract.image_to_string(Image.open(reconstructed_file))
     
-    print(text)
     return text

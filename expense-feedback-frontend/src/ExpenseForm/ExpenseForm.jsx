@@ -10,13 +10,18 @@ import { useNavigate } from 'react-router-dom';
 import './ExpenseForm.css';
 import Navbar from '../Navbar/Navbar';
 import InputAdornment from '@mui/material/InputAdornment';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import { GrPowerReset } from "react-icons/gr";
+
 
 
 
 function ExpenseForm() {
 
   const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const name = user ? user.firstName : ''
   
   const [formData, setFormData] = useState({
     transactionDate: '',
@@ -29,6 +34,7 @@ function ExpenseForm() {
     taxAndPostedAmount: '',
     personalExpense: false,
     comment: '',
+    name: name,
   });
   const [receiptFile, setReceiptFile] = useState(null);
   const [filename, setFilename] = useState('');
@@ -59,7 +65,7 @@ function ExpenseForm() {
       'image/*': ['.jpeg', '.jpg', '.png', '.tif', '.tiff'],
       'application/pdf': ['.pdf'],
     },
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: 5 * 1024 * 1024,
     onDrop,
   });
 
@@ -77,6 +83,10 @@ function ExpenseForm() {
     }));
   };
 
+  const handleReset = () =>{
+    setFeedback('');
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFeedback('');
@@ -92,25 +102,48 @@ function ExpenseForm() {
       ...formData
     };
 
+    console.log(expenseData);
+    console.log(name);
+
     try {
-        const formData = new FormData();
-        formData.append('file', receiptFile);
-        const uploadResponse = await axios.post('http://localhost:3000/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        expenseData.receiptFileId = uploadResponse.data;
+      const user=JSON.parse(localStorage.getItem("user"));
+      const email=user.email;
+      const formData = new FormData();
+      formData.append('file', receiptFile);
+      formData.append('email',email);
+      const uploadResponse = await axios.post('http://localhost:3000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      expenseData.receiptFileId = uploadResponse.data;
 
-      const response = await axios.post('http://127.0.0.1:5000/submit-expense', expenseData);
-      console.log(response.data);
+      const response = await fetch('http://127.0.0.1:5000/submit-expense', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(expenseData)
+      });
 
-      setFeedback(response.data);
+      setIsLoading(false);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let result = '';
+
+      while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          result += decoder.decode(value);
+          setFeedback(result);
+      }
+
       setIsLoading(false);
 
-  } catch (error) {
-    console.error('Error:', error);
-    setIsLoading(false);
+  } 
+  catch (error) {
+      console.error('Error:', error);
+      setIsLoading(false);
   }
 };
 
@@ -307,6 +340,9 @@ function ExpenseForm() {
               <Button type="submit" variant="contained" style={{ marginTop: '20px', backgroundColor: '#042a2f', color: 'white' }}>
                 Generate Feedback ✨
               </Button>
+              <Button onClick={handleReset} variant="contained" style={{marginLeft:'6px', marginTop: '20px', backgroundColor: 'black', color: 'white' }}>
+                <GrPowerReset/>
+              </Button>
             </Grid>
           </Grid>
         </form>
@@ -318,21 +354,19 @@ function ExpenseForm() {
                 {/* <hr style={{height: '2px', backgroundColor: '#042a2f', borderRadius: '3px', width: '8vh', marginLeft: '20vh'}}></hr> */}
               </Typography>
 
-              {feedback === '' && isLoading==false && (
+              {feedback==='' ? (!isLoading ? (
                 <div style={{ opacity: 0.8, marginTop: '32vh' }}>
                   <Typography variant="body2" style={{ fontFamily: 'Poppins', color: '#042a2f', opacity: 0.6 }}>Your feedback will be accessible here.</Typography>
-                </div>
-              )}
-              {isLoading ? (
-                <CircularProgress style={{ marginTop: '32vh', color: '#042a2f' }} />
-              ) : (
-                feedback.split('\n').map((point, index) => (
-                  <Typography key={index} variant="body1" style={{ fontFamily: 'Poppins', color: '#042a2f' }}>
-                    <div style={{ marginBottom: '30px' }}></div>
-                    {point}
-                  </Typography>
-                ))
-              )}
+                </div>):(
+                  <CircularProgress style={{ marginTop: '32vh', color: '#042a2f' }} />
+                )
+              ):(feedback.split('\n').map((point, index) => (
+                <Typography key={index} variant="body1" style={{ fontFamily: 'Poppins', color: '#042a2f' }}>
+                  <div style={{ marginBottom: '30px' }}></div>
+                  {point}
+                </Typography>
+              )))}
+              
             </Box>
           </Grid>
         </div>

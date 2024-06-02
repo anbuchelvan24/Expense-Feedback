@@ -1,4 +1,3 @@
-from query_data import query_rag
 from langchain_community.llms.ollama import Ollama
 
 EVAL_PROMPT = """
@@ -36,11 +35,9 @@ def query_and_validate(question: str, expected_response: str):
     print(prompt)
 
     if "true" in evaluation_results_str_cleaned:
-        # Print response in Green if it is correct.
         print("\033[92m" + f"Response: {evaluation_results_str_cleaned}" + "\033[0m")
         return True
     elif "false" in evaluation_results_str_cleaned:
-        # Print response in Red if it is incorrect.
         print("\033[91m" + f"Response: {evaluation_results_str_cleaned}" + "\033[0m")
         return False
     else:
